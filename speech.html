@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .app-voice-pause,.app-voice-play{
+        height: 18px;
+        background-repeat: no-repeat;
+        background-image: url(../img/voice.png);
+        background-size: 18px auto;
+        opacity: 0.5;
+    }
+    .app-voice-you .app-voice-pause{
+        /*从未播放*/
+        background-position: 0px -39px;
+    }
+    .app-voice-you .app-voice-play{
+        /*播放中（不需要过渡动画）*/
+        background-position: 0px -39px;
+        -webkit-animation: voiceplay 1s infinite step-start;
+        -moz-animation: voiceplay 1s infinite step-start;
+        -o-animation: voiceplay 1s infinite step-start;
+        animation: voiceplay 1s infinite step-start;
+    }
+    @-webkit-keyframes voiceplay {
+        0%,
+        100% {
+            background-position: 0px -39px;
+        }
+        33.333333% {
+            background-position: 0px -0px;
+        }
+        66.666666% {
+            background-position: 0px -19.7px;
+        }
+    }   
+</style>
+<body>
+    <div class="app-voice-you" voiceSrc="xx.mp3">
+        <img class="app-voice-headimg" src="xx.png" />
+        <div style="width: 60%;" class="app-voice-state-bg">
+            <div class="app-voice-state app-voice-pause"></div>
+        </div>
+        <div class="app-voice-time app-voice-unread">
+            1'6"
+        </div>
+    </div>
+        
+    <!--语音播放控件-->
+    <audio id="audio_my" src="">
+        Your browser does not support the audio tag.
+    </audio>
+    <script>
+     var app_voice_time = this.getElementsByClassName("app-voice-time")[0];
+    if(app_voice_time.className.indexOf("app-voice-unread") != -1){
+        //存在红点时，把红点样式删除
+        app_voice_time.className = app_voice_time.className.replace("app-voice-unread","");
+    }   
+
+    //语音播放完事件（PAGE.audio是audio控件的document）
+    PAGE.audio.addEventListener('ended', function () {
+        //循环获取下一个节点
+        PAGE.preVoice = PAGE.currentVoice;
+        var currentVoice = PAGE.currentVoice;
+            while(true){
+                currentVoice = currentVoice.nextElementSibling;//下一个兄弟节点
+                //已经到达最底部
+                if(!currentVoice){
+                    PAGE.preVoice.getElementsByClassName("app-voice-state")[0].className = "app-voice-state app-voice-pause";
+                    return false;
+                }
+                var voiceSrc = currentVoice.getAttribute("voiceSrc");
+                if(voiceSrc && voiceSrc != ""){
+                    break;
+                }
+            }
+            if(!PAGE.autoNextVoice){
+                PAGE.preVoice.getElementsByClassName("app-voice-state")[0].className = "app-voice-state app-voice-pause";
+                return false;
+            }
+            PAGE.currentVoice = currentVoice;
+            //获取得到下一个语音节点，播放
+            PAGE.audio.src = voiceSrc;
+            PAGE.audio.play();
+            PAGE.Event_PlayVoice();
+    }, false);
+    </script>
+</body>
+</html>

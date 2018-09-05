@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .speech-message{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;      
+    }
+    .speech-time{
+        color: #999999;
+        font-size: 12px;
+        padding: 0 10px;
+    }
+    .speech-message-content{
+        padding: 15px 0;
+        width: 100px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        background: green;
+    }
+</style>
+<body>
+    <audio>
+        <source src="张学友 - 楼上来的声音 (Live).mp3" type="audio/mpeg">
+        你的浏览器不支持audio元素
+    </audio>
+    <div class="speech-message">
+        <span class="speech-time">4'16"</span>
+        <div class="speech-message-content"></div>
+    </div>
+</body>
+</html>
