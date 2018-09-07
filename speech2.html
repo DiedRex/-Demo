@@ -19,21 +19,104 @@
         padding: 0 10px;
     }
     .speech-message-content{
-        padding: 15px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 15px;
         width: 100px;
-        border: 1px solid #000000;
         border-radius: 5px;
-        background: green;
+        background-color: green;
+    }
+    .anime{
+        width: 14px;
+        height: 14px;
+        background: url('message.png');
+        background-size: 56px 14px;
+        /* animation: demo 2s steps(4) infinite;
+        -webkit-animation: demo 2s steps(4) infinite; */
+    }
+
+    @-webkit-keyframes demo{
+        0%{ background-position: 0 0 }
+        100%{ background-position: -56px 0} 
+    }
+
+    @keyframes demo{
+        0%{ background-position: 0 0 }
+        100%{ background-position: -56px 0} 
     }
 </style>
 <body>
-    <audio>
-        <source src="张学友 - 楼上来的声音 (Live).mp3" type="audio/mpeg">
-        你的浏览器不支持audio元素
-    </audio>
-    <div class="speech-message">
-        <span class="speech-time">4'16"</span>
-        <div class="speech-message-content"></div>
+    <audio id="audio"><source src="张学友 - 楼上来的声音 (Live).mp3" type="audio/mpeg"></audio>
+    <div id="audio_pause" onclick="changeColor(this)" class="speech-message">
+        <span class="speech-time"></span>
+        <div class="speech-message-content">
+            <div class="anime"></div>
+        </div>
     </div>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+    var audio = $('#audio').get(0);
+    $('#audio_pause').click(function(){
+        //点击播放
+        if(audio.paused){
+            audio.play();
+            $(".anime").css("animation","demo 2s steps(4) infinite")
+            
+        } else{
+            audio.pause();
+            console.log(sec_to_time(audio.duration));
+            $(".anime").css("animation","");
+        }
+        audio.onended = function(){
+            // anime.style.cssText = "animation:null;"
+            $(".anime").css("animation","");
+        }
+    });
+
+    function changeColor(obj){
+        console.log(obj.id);
+        // $("#"+obj.id).css("display","none");
+        // var a = document.getElementById("vid_b300ccec-7500-4782-a30c-b6fb71be3439.mp3");
+        // var anime = a.getElementsByClassName("anime")[0]; 
+        // $("#"+obj.id).find(".anime").css("display","none");
+        //改变语音长度
+        var vid=obj.id.replace("vid_","")
+        var audio = document.getElementById(vid);
+        var speechContent = document.getElementById(obj.id);
+        var width = speechContent.getElementsByClassName("speech-message-content")[0];
+        width.style.width = parseInt(sec_to_width(audio.duration)) + "px";
+    }
+    //秒和语音的长度转换
+    var sec_to_width = function(second){
+        var width;
+        if(second<=60){
+            width = 60+(3*second);
+            console.log(width);
+        }else{
+            width = 240;
+            console.log(width);
+        }        
+        return width;
+    }
+
+    //秒转变成格式化时间 分'秒"
+    var sec_to_time = function(second){
+        var time = '';
+        if(second > -1){
+            var min = Math.floor(second/60) % 60;
+            var  sec = second % 60;
+            //处理时间格式 分'秒''
+           if(min > 0){
+                time += min + "'";
+            } 
+            time += sec.toFixed();
+            time += "\"";
+        }
+        console.log(time);
+        return time;
+    }
+    </script>
 </body>
 </html>

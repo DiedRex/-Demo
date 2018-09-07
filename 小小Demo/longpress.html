@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .longpress{
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 50px;
+        top: 50%;
+        left: 50%;
+        padding: 0 20px;
+        margin-top: -50px;
+        margin-left: -50px;
+        background-color: brown;
+    }
+</style>
+<body>
+    <div class="longpress" id="longpress">
+        Hello Html5
+    </div>
+
+    <script>
+    longpress("longpress",doSomething);
+
+    function doSomething(){
+        console.log("这个是长按执行事件");
+    }
+    
+
+    
+    // 函数名longpress，参数为: 需长按元素的id、长按之后的逻辑函数func
+    function longpress(id, func) {
+
+    var timeOutEvent;
+    //设立检测是否为长按的flag，用于h5
+    var flag = false;
+
+    document.querySelector('#' + id).addEventListener('touchstart', function (e) {
+        // 开启定时器前先清除定时器，防止重复触发
+        clearTimeout(timeOutEvent);
+        // 开启延时定时器
+        timeOutEvent = setTimeout(function () {
+            // 调用长按之后的逻辑函数func
+            func();
+            flag = true;
+        }, 1200);  // 长按时间为300ms，可以自己设置
+    });
+
+    document.querySelector('#' + id).addEventListener('touchmove', function (e) {
+        // 长按过程中，手指是不能移动的，若移动则清除定时器，中断长按逻辑
+        clearTimeout(timeOutEvent);
+        //如果flag为true则是取消长按事件
+        if(flag){
+            alert("长按事件取消");
+        }
+        /* e.preventDefault() --> 若阻止默认事件，则在长按元素上滑动时，页面是不滚动的，按需求设置吧 */
+    });
+
+    document.querySelector('#' + id).addEventListener('touchend', function (e) {
+        clearTimeout(timeOutEvent);
+        //如果flag为true则执行长按事件结束的事件。
+        if(flag){
+            alert("长按结束");
+        }
+        //(不管点击和长按都会发生的事件)
+        console.log("事件结束");
+    });
+    }
+    </script>
+</body>
+</html>
